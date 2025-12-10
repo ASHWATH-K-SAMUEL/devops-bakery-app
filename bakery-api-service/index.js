@@ -9,6 +9,10 @@ app.get('/api/menu', (req, res) => {
   console.log("Menu requested");
   res.json(menu);
 });
+// Add this route for root "/"
+app.get('/', (req, res) => {
+  res.send('Bakery API is running!');
+});
 
 app.get('/health', (req, res) => {
   res.json({ status: 'UP' });
