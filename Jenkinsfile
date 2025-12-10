@@ -1,15 +1,12 @@
 pipeline {
     agent any
 
-    environment {
-        DOCKERHUB_USERNAME = 'YOUR_DOCKERHUB_USERNAME'
-    }
-
     stages {
 
         stage('Clone Repo') {
             steps {
-                echo "Cloning repository..."
+                git branch: 'main',
+                    url: 'https://github.com/ashwath-k-samuel/devops-bakery-app.git'
             }
         }
 
@@ -28,16 +25,29 @@ pipeline {
         stage('Run Containers') {
             steps {
                 sh '''
-                docker rm -f bakery-api || true
-                docker rm -f bakery-ui || true
+                # Remove old containers if they exist
+                docker rm -f bakery-api bakery-ui || true
 
-                docker run -d --name bakery-api -p 3001:3001 bakery-api
-                docker run -d --name bakery-ui -p 3000:3000 \
-                  -e API_URL=http://localhost:3001/api/menu \
+                # Create docker network if not exists
+                docker network inspect bakery-net >/dev/null 2>&1 || \
+                  docker network create bakery-net
+
+                # Run API container
+                docker run -d \
+                  --name bakery-api \
+                  --network bakery-net \
+                  -p 3001:3001 \
+                  bakery-api
+
+                # Run UI container
+                docker run -d \
+                  --name bakery-ui \
+                  --network bakery-net \
+                  -p 3000:3000 \
+                  -e API_URL=http://bakery-api:3001/api/menu \
                   bakery-ui
                 '''
             }
         }
     }
 }
-
