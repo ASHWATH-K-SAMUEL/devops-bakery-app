@@ -1,0 +1,12 @@
+<h1><%= bakeryName %></h1>
+<p>Running on: <%= hostname %></p>
+
+<h2>Menu</h2>
+<ul>
+  <% menu.forEach(item => { %>
+    <li><%= item.name %> - ₹<%= item.price %></li>
+  <% }) %>
+</ul>
+
+<a href="/menu">View Full Menu</a>
+
