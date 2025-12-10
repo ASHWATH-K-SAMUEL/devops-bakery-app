@@ -7,7 +7,7 @@ const port = 3000;
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
 
-const API_URL = process.env.API_URL || 'http://localhost:3001/api/menu';
+const API_URL = process.env.API_URL || 'http://bakery-api:3001/api/menu';
 const BAKERY_NAME = process.env.BAKERY_NAME || 'Sweet Bakery';
 
 app.get('/', async (req, res) => {
